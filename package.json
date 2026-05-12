@@ -2,6 +2,7 @@
   "name": "storelistapp",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "homepage": "https://chanpa09.github.io/StoreListApp",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
