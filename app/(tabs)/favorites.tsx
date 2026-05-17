@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, SafeAreaView, Platform, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useStoreContext, Store } from '../context/StoreContext';
+import { useStoreContext, Store } from '@/context/StoreContext';
 
 export default function FavoritesScreen() {
-  const { stores, favorites, toggleFavorite, isLoading } = useStoreContext();
+  const { stores, favorites, toggleFavorite, isLoading, favoritesLoaded } = useStoreContext();
 
   const favoriteStores = React.useMemo(() => {
     return stores.filter(store => favorites.includes(store.name));
@@ -30,7 +30,11 @@ export default function FavoritesScreen() {
         <View style={styles.storeCardHeader}>
           <Text style={styles.storeName} numberOfLines={1}>{item.name}</Text>
           <View style={styles.actionsRow}>
-            <TouchableOpacity onPress={() => toggleFavorite(item.name)} style={styles.favButton}>
+            <TouchableOpacity
+              onPress={() => toggleFavorite(item.name)}
+              style={[styles.favButton, !favoritesLoaded && { opacity: 0.4 }]}
+              disabled={!favoritesLoaded}
+            >
               <Ionicons name="heart" size={24} color="#FF3B30" />
             </TouchableOpacity>
             <TouchableOpacity 

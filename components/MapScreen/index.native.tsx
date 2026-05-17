@@ -5,7 +5,7 @@ import MapViewCluster from 'react-native-map-clustering';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetModal, BottomSheetScrollView, BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import { useStoreContext, Store } from '@/app/context/StoreContext';
+import { useStoreContext, Store } from '@/context/StoreContext';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -55,7 +55,7 @@ const getGenreIcon = (genre: string) => {
 };
 
 export default function MapScreen() {
-  const { stores, favorites, toggleFavorite, isLoading } = useStoreContext();
+  const { stores, favorites, toggleFavorite, isLoading, favoritesLoaded } = useStoreContext();
 
   const mapRef = useRef<any>(null);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -195,7 +195,11 @@ export default function MapScreen() {
             )}
           </View>
           <View style={styles.actionsRow}>
-            <TouchableOpacity onPress={() => toggleFavorite(item.name)} style={styles.favButton}>
+            <TouchableOpacity
+              onPress={() => toggleFavorite(item.name)}
+              style={[styles.favButton, !favoritesLoaded && { opacity: 0.4 }]}
+              disabled={!favoritesLoaded}
+            >
               <Ionicons name={isFav ? "heart" : "heart-outline"} size={22} color={isFav ? "#FF3B30" : "#666"} />
             </TouchableOpacity>
             <TouchableOpacity 
@@ -215,15 +219,6 @@ export default function MapScreen() {
     );
   };
 
-  if (isLoading) {
-    return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Ionicons name="map-outline" size={60} color="#ccc" />
-        <Text style={{ marginTop: 20, color: '#888', fontWeight: 'bold' }}>데이터 불러오는 중...</Text>
-      </View>
-    );
-  }
-
   const renderBackdrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
@@ -235,6 +230,15 @@ export default function MapScreen() {
     ),
     []
   );
+
+  if (isLoading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Ionicons name="map-outline" size={60} color="#ccc" />
+        <Text style={{ marginTop: 20, color: '#888', fontWeight: 'bold' }}>데이터 불러오는 중...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

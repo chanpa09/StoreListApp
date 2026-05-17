@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Platform, Dimensions, TextInput, Linking, FlatList } from 'react-native';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
-import { useStoreContext, Store } from '@/app/context/StoreContext';
+import { useStoreContext, Store } from '@/context/StoreContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -35,7 +35,7 @@ const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => 
 };
 
 export default function MapScreen() {
-  const { stores, favorites, toggleFavorite, isLoading } = useStoreContext();
+  const { stores, favorites, toggleFavorite, isLoading, favoritesLoaded } = useStoreContext();
 
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -111,7 +111,11 @@ export default function MapScreen() {
             )}
           </View>
           <View style={styles.actionsRow}>
-            <TouchableOpacity onPress={() => toggleFavorite(item.name)} style={styles.favButton}>
+            <TouchableOpacity
+              onPress={() => toggleFavorite(item.name)}
+              style={[styles.favButton, !favoritesLoaded && { opacity: 0.4 }]}
+              disabled={!favoritesLoaded}
+            >
               <Ionicons name={isFav ? "heart" : "heart-outline"} size={22} color={isFav ? "#FF3B30" : "#666"} />
             </TouchableOpacity>
             <TouchableOpacity 

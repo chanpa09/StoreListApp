@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { StoreProvider } from '../context/StoreContext';
+import { StoreProvider } from '@/context/StoreContext';
 
 export default function TabLayout() {
   return (
